@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolationException;
-
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
@@ -24,8 +22,13 @@ public class ErrorHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler
-    public ResponseEntity<String> handlerConflictData(final ConflictData e) {
-        log.error("Возникла ошибка не найденного объекта. Ошибка:"+e.getMessage());
+    public ResponseEntity<String> handlerConflictData(final ConflictDataException e) {
+        log.error("Возникла ошибка конфликтных данных. Ошибка:"+e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler
+    public ResponseEntity<String> handlerForbidden(final ForbiddenException e) {
+        log.error("Возникла ошибка запрещенных данных. Ошибка:"+e.getMessage());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

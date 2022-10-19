@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-import ru.practicum.shareit.exception.ConflictData;
-import ru.practicum.shareit.exception.ValidationException;
+
+import ru.practicum.shareit.exception.ConflictDataException;
+
 
 import java.util.*;
 @Repository
@@ -17,7 +17,7 @@ public class UserRepositoryDAO implements UserRepository{
     @Override
     public User addUser(User user){
         if(!checkEmail(user)){
-            throw new ConflictData("Пользователь с такой почтой уже существует.");
+            throw new ConflictDataException("Пользователь с такой почтой уже существует.");
         }
         updateId(user);
         users.put(user.getId(),user);
@@ -26,7 +26,7 @@ public class UserRepositoryDAO implements UserRepository{
     @Override
     public User updateUser(Integer id,User user){
         if(!checkEmail(user)){
-            throw new ConflictData("Пользователь с такой почтой уже существует.");
+            throw new ConflictDataException("Пользователь с такой почтой уже существует.");
         }
         if(user.getName()!=null){
             users.get(id).setName(user.getName());
@@ -38,12 +38,13 @@ public class UserRepositoryDAO implements UserRepository{
     }
     @Override
     public Optional<User> getUserById(Integer id){
-        return Optional.of(users.get(id));
+        return Optional.ofNullable(users.get(id));
     }
     @Override
     public void deleteUserById(Integer id){
         users.remove(id);
     }
+
     private void updateId(User user){
         id++;
         user.setId(id);
