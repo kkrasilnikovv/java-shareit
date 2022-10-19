@@ -17,22 +17,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAll() {
-        return repository.findAll().stream().map(mapper::userToDTO).collect(Collectors.toList());
+        return repository.findAll().stream().map(mapper::userToDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDTO addUser(UserDTO userDTO) {
-        return mapper.userToDTO(repository.addUser(mapper.DTOtoUser(userDTO)));
+        return mapper.userToDto(repository.addUser(mapper.dtoToUser(userDTO)));
     }
 
     @Override
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
-        return mapper.userToDTO(repository.updateUser(id, mapper.DTOtoUser(userDTO)));
+        return mapper.userToDto(repository.updateUser(id, mapper.dtoToUser(userDTO)));
     }
 
     @Override
     public UserDTO getUserById(Integer id) {
-        return mapper.userToDTO(repository.getUserById(id).orElseThrow(() ->
+        return mapper.userToDto(repository.getUserById(id).orElseThrow(() ->
                 new NotFoundException("Пользователь с id " + id + " не найден.")));
     }
 

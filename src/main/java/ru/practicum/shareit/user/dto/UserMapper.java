@@ -5,11 +5,11 @@ import ru.practicum.shareit.user.User;
 
 @Service
 public class UserMapper {
-    public UserDTO userToDTO(User user) {
+    public UserDTO userToDto(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getEmail());
     }
 
-    public User DTOtoUser(UserDTO userDTO) {
+    public User dtoToUser(UserDTO userDTO) {
         return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail());
     }
 }

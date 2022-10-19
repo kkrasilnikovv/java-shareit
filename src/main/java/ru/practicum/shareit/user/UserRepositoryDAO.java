@@ -10,7 +10,7 @@ import java.util.*;
 @Repository
 public class UserRepositoryDAO implements UserRepository {
     private int id = 0;
-    private final static Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
     public List<User> findAll() {

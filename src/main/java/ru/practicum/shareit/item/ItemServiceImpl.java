@@ -20,33 +20,33 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAll(Integer userId) {
-        return repository.getAll(userId).stream().map(mapper::ItemToDto).collect(Collectors.toList());
+        return repository.getAll(userId).stream().map(mapper::itemToDto).collect(Collectors.toList());
     }
 
     @Override
     public ItemDto addItem(Integer userId, ItemDto itemDto) {
         userService.getUserById(userId);
-        return mapper.ItemToDto(repository.addItem(mapper.DtoToItem(itemDto)));
+        return mapper.itemToDto(repository.addItem(mapper.dtoToItem(itemDto)));
     }
 
     @Override
     public ItemDto updateItem(Integer userId, ItemDto itemDto) {
         userService.getUserById(userId);
         itemDto.setOwner(userId);
-        if (!getItemById(mapper.DtoToItem(itemDto).getId()).getOwner().equals(itemDto.getOwner())) {
+        if (!getItemById(mapper.dtoToItem(itemDto).getId()).getOwner().equals(itemDto.getOwner())) {
             throw new ForbiddenException("Владелец не может изменяться.");
         }
-        return mapper.ItemToDto(repository.updateItem(mapper.DtoToItem(itemDto)));
+        return mapper.itemToDto(repository.updateItem(mapper.dtoToItem(itemDto)));
     }
 
     @Override
     public ItemDto getItemById(Integer id) {
-        return mapper.ItemToDto(repository.getItemById(id).orElseThrow(() ->
+        return mapper.itemToDto(repository.getItemById(id).orElseThrow(() ->
                 new NotFoundException("Объект с id " + id + " не найден.")));
     }
 
     @Override
     public List<ItemDto> search(String str) {
-        return repository.search(str).stream().map(mapper::ItemToDto).collect(Collectors.toList());
+        return repository.search(str).stream().map(mapper::itemToDto).collect(Collectors.toList());
     }
 }
