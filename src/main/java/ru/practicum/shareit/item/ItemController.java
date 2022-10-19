@@ -13,27 +13,32 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService service;
+
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Integer userId){
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Integer userId) {
         return service.getAll(userId);
     }
+
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Integer userId,@Valid @RequestBody ItemDto itemDto){
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Integer userId, @Valid @RequestBody ItemDto itemDto) {
         itemDto.setOwner(userId);
-        return service.addItem(userId,itemDto);
+        return service.addItem(userId, itemDto);
     }
+
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable Integer id,
-                              @RequestHeader("X-Sharer-User-Id") Integer userId, @RequestBody ItemDto itemDto){
+                              @RequestHeader("X-Sharer-User-Id") Integer userId, @RequestBody ItemDto itemDto) {
         itemDto.setId(id);
-        return service.updateItem(userId,itemDto);
+        return service.updateItem(userId, itemDto);
     }
+
     @GetMapping("/{id}")
-    public ItemDto getItemById(@PathVariable Integer id){
+    public ItemDto getItemById(@PathVariable Integer id) {
         return service.getItemById(id);
     }
+
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam(name = "text") String params){
+    public List<ItemDto> search(@RequestParam(name = "text") String params) {
         return service.search(params);
     }
 }

@@ -56,7 +56,7 @@ public class ItemRepositoryDAO implements ItemRepository {
         for (Item item : items.values()) {
             if ((item.getName().toLowerCase().contains(str.toLowerCase()) ||
                     item.getDescription().toLowerCase().contains(str.toLowerCase())) &&
-            item.getAvailable()) {
+                    item.getAvailable()) {
                 temp.add(item);
             }
         }

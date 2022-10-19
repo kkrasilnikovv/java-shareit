@@ -16,14 +16,6 @@ public class Item {
     private Integer owner;
     private Integer request;
 
-    public Item(Integer id, String name, String description, Boolean available, Integer owner, Integer request) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-        this.request = request;
-    }
 
     public Item(Integer id, String name, String description, Boolean available, Integer owner) {
         this.id = id;
