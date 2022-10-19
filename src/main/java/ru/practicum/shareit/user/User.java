@@ -1,11 +1,13 @@
 package ru.practicum.shareit.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
+@AllArgsConstructor
 public class User {
     private Integer id;
     @NotBlank
@@ -13,11 +15,4 @@ public class User {
     @NotBlank
     @Email
     private String email;
-
-    public User(Integer id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
-
 }

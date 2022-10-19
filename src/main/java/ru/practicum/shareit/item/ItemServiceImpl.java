@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository repository;
+    private final ItemRepository itemRepository;
     private final UserService userService;
     private final ItemMapper mapper;
 
     @Override
     public List<ItemDto> getAll(Integer userId) {
-        return repository.getAll(userId).stream().map(mapper::itemToDto).collect(Collectors.toList());
+        return itemRepository.getAll(userId).stream().map(mapper::itemToDto).collect(Collectors.toList());
     }
 
     @Override
     public ItemDto addItem(Integer userId, ItemDto itemDto) {
         userService.getUserById(userId);
-        return mapper.itemToDto(repository.addItem(mapper.dtoToItem(itemDto)));
+        return mapper.itemToDto(itemRepository.addItem(mapper.dtoToItem(itemDto)));
     }
 
     @Override
@@ -36,17 +36,17 @@ public class ItemServiceImpl implements ItemService {
         if (!getItemById(mapper.dtoToItem(itemDto).getId()).getOwner().equals(itemDto.getOwner())) {
             throw new ForbiddenException("Владелец не может изменяться.");
         }
-        return mapper.itemToDto(repository.updateItem(mapper.dtoToItem(itemDto)));
+        return mapper.itemToDto(itemRepository.updateItem(mapper.dtoToItem(itemDto)));
     }
 
     @Override
     public ItemDto getItemById(Integer id) {
-        return mapper.itemToDto(repository.getItemById(id).orElseThrow(() ->
+        return mapper.itemToDto(itemRepository.getItemById(id).orElseThrow(() ->
                 new NotFoundException("Объект с id " + id + " не найден.")));
     }
 
     @Override
     public List<ItemDto> search(String str) {
-        return repository.search(str).stream().map(mapper::itemToDto).collect(Collectors.toList());
+        return itemRepository.search(str).stream().map(mapper::itemToDto).collect(Collectors.toList());
     }
 }

@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
 
-@Service
+@Component
 public class ItemMapper {
     public ItemDto itemToDto(Item item) {
         return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), item.getOwner());
