@@ -122,7 +122,7 @@ public class BookingServiceImpl implements BookingService {
 
     private List<Booking> sortedByState(List<Booking> bookings, State state) {
         if (state.equals(State.CURRENT)) {
-            return bookings.stream().filter(x -> x.getStatus().equals(Status.APPROVED) && x.getEnd()
+            return bookings.stream().filter(x -> x.getStatus().equals(Status.REJECTED) && x.getEnd()
                     .isAfter(LocalDateTime.now())).collect(Collectors.toList());
         } else if (state.equals(State.PAST)) {
             return bookings.stream().filter(x -> x.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());

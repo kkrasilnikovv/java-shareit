@@ -47,9 +47,9 @@ public class ItemController {
         return ItemMapper.itemToDto(itemService.updateItem(id, userId, ItemMapper.dtoToItem(itemDto)));
     }
 
-    @GetMapping("/{id}")
-    public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long id) {
-        Item item = itemService.findItemById(id);
+    @GetMapping("/{itemId}")
+    public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
+        Item item = itemService.findItemById(itemId);
         ItemDto itemDto = ItemMapper.itemToDto(item);
         if (item.getOwner().equals(userId)) {
             itemDto = setLastAndNextBooking(item);
@@ -76,6 +76,9 @@ public class ItemController {
     private ItemDto setLastAndNextBooking(Item item) {
         ItemDto itemDto = ItemMapper.itemToDto(item);
         List<Booking> bookings = bookingService.findAllByItem(item);
+        if (bookings.isEmpty()) {
+            return itemDto;
+        }
         BookingDtoItem lastBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
                 .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
