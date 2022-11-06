@@ -54,8 +54,8 @@ public class ItemController {
         if (item.getOwner().equals(userId)) {
             itemDto = setLastAndNextBooking(item);
         }
-        itemDto.setComments(itemService.findCommentByItem(item).stream().map(ItemMapper::commentToDto).
-                collect(Collectors.toList()));
+        itemDto.setComments(itemService.findCommentByItem(item).stream().map(ItemMapper::commentToDto)
+                .collect(Collectors.toList()));
         return itemDto;
     }
 
@@ -78,13 +78,13 @@ public class ItemController {
         List<Booking> bookings = bookingService.findAllByItem(item);
         BookingDtoItem lastBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart())).
-                map(BookingMapper::bookingToDtoItem)
+                .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
+                .map(BookingMapper::bookingToDtoItem)
                 .orElse(null);
         BookingDtoItem nextBooking = bookings.stream()
                 .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                .min((booking, booking1) -> booking1.getStart().compareTo(booking.getStart())).
-                map(BookingMapper::bookingToDtoItem).orElse(null);
+                .min((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
+                .map(BookingMapper::bookingToDtoItem).orElse(null);
         itemDto.setLastBooking(lastBooking);
         itemDto.setNextBooking(nextBooking);
         return itemDto;

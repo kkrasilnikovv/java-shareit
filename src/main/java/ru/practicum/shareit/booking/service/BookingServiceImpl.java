@@ -122,8 +122,8 @@ public class BookingServiceImpl implements BookingService {
 
     private List<Booking> sortedByState(List<Booking> bookings, State state) {
         if (state.equals(State.CURRENT)) {
-            return bookings.stream().filter(x -> x.getStatus().equals(Status.APPROVED) && x.getEnd().
-                    isAfter(LocalDateTime.now())).collect(Collectors.toList());
+            return bookings.stream().filter(x -> x.getStatus().equals(Status.APPROVED) && x.getEnd()
+                    .isAfter(LocalDateTime.now())).collect(Collectors.toList());
         } else if (state.equals(State.PAST)) {
             return bookings.stream().filter(x -> x.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
         } else if (state.equals(State.WAITING)) {
@@ -132,8 +132,8 @@ public class BookingServiceImpl implements BookingService {
             return bookings.stream().filter(x -> x.getStatus().equals(Status.CANCELED) ||
                     x.getStatus().equals(Status.REJECTED)).collect(Collectors.toList());
         } else if (state.equals(State.FUTURE)) {
-            return bookings.stream().filter(x -> x.getStart().isAfter(LocalDateTime.now())).
-                    collect(Collectors.toList());
+            return bookings.stream().filter(x -> x.getStart().isAfter(LocalDateTime.now()))
+                    .collect(Collectors.toList());
         } else {
             return bookings;
         }
