@@ -22,10 +22,10 @@ public class BookingMapper {
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .item(BookingDtoUser.Item.builder().
-                        id(booking.getItem().getId()).
-                        name(booking.getItem().getName()).
-                        build())
+                .item(BookingDtoUser.Item.builder()
+                        .id(booking.getItem().getId())
+                        .name(booking.getItem().getName())
+                        .build())
                 .booker(BookingDtoUser.Booker.builder()
                         .id(booking.getBooker().getId())
                         .name(booking.getBooker().getName())

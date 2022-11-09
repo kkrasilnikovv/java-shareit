@@ -46,8 +46,8 @@ public class ItemMapper {
                     .build());
         }
         if (item.getComments() != null && !item.getComments().isEmpty()) {
-            itemDto.setComments(item.getComments().stream().
-                    map(x -> ItemDto.Comment.builder().id(x.getId())
+            itemDto.setComments(item.getComments().stream()
+                    .map(x -> ItemDto.Comment.builder().id(x.getId())
                             .authorName(x.getAuthor().getName())
                             .text(x.getText())
                             .created(x.getCreated())
