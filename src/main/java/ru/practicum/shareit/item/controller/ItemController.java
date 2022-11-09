@@ -1,21 +1,23 @@
 package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingDtoItem;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.validatedGroup.Create;
+import ru.practicum.shareit.exception.validatedGroup.Update;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,71 +27,57 @@ import java.util.stream.Collectors;
 public class ItemController {
     private final ItemService itemService;
     private final BookingService bookingService;
+    private final CommentService commentService;
+
 
     @GetMapping
     public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        List<ItemDto> items = new ArrayList<>();
-        for (Item item : itemService.findAll(userId)) {
-            items.add(setLastAndNextBooking(item));
+        List<Item> items = itemService.findAll(userId);
+        for (Item item : items) {
+            if (item.getOwner().getId().equals(userId)) {
+                bookingService.setLastAndNextBooking(item);
+            }
         }
-        return items;
+        return items.stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long userId, @Valid @RequestBody ItemDto itemDto) {
-        return ItemMapper.itemToDto(itemService.addItem(userId, ItemMapper.dtoToItem(itemDto)));
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+                           @Validated(Create.class) @RequestBody ItemRequestDto itemDto) {
+        return ItemMapper.itemToDto(itemService.add(userId, ItemMapper.dtoToItem(itemDto)));
     }
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable Long id,
-                              @RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody ItemDto itemDto) {
+                              @RequestHeader("X-Sharer-User-Id") Long userId,
+                              @Validated(Update.class) @RequestBody ItemRequestDto itemDto) {
 
-        return ItemMapper.itemToDto(itemService.updateItem(id, userId, ItemMapper.dtoToItem(itemDto)));
+        return ItemMapper.itemToDto(itemService.update(id, userId, ItemMapper.dtoToItem(itemDto)));
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
-        Item item = itemService.findItemById(itemId);
-        ItemDto itemDto = ItemMapper.itemToDto(item);
-        if (item.getOwner().equals(userId)) {
-            itemDto = setLastAndNextBooking(item);
+        Item item = itemService.findById(itemId);
+        if (item.getOwner().getId().equals(userId)) {
+            bookingService.setLastAndNextBooking(item);
         }
-        itemDto.setComments(itemService.findCommentByItem(item).stream().map(ItemMapper::commentToDto)
-                .collect(Collectors.toList()));
-        return itemDto;
+        return ItemMapper.itemToDto(item);
     }
 
     @PostMapping("{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long bookerId, @PathVariable Long itemId,
-                                 @Valid @RequestBody CommentDto commentDto) {
+                                 @Validated(Create.class) @RequestBody CommentDto commentDto) {
         commentDto.setCreated(LocalDateTime.now());
-        bookingService.checkBookingAllByItemAndBooker(itemId, bookerId);
-        return ItemMapper.commentToDto(itemService.addComment(ItemMapper.dtoToComment(commentDto), bookerId, itemId));
+        bookingService.checkAllByItemAndBooker(itemId, bookerId);
+        return ItemMapper.commentToDto(commentService.addComment(bookerId, itemId, ItemMapper.dtoToComment(commentDto)));
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam(name = "text") String params,
+    public List<ItemDto> search(@RequestParam(name = "text") String text,
                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.search(params, userId).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
-    }
-
-    private ItemDto setLastAndNextBooking(Item item) {
-        ItemDto itemDto = ItemMapper.itemToDto(item);
-        List<Booking> bookings = bookingService.findAllByItem(item);
-        if (bookings.isEmpty()) {
-            return itemDto;
+        if (text.isBlank()) {
+            return Collections.emptyList();
         }
-        BookingDtoItem lastBooking = bookings.stream()
-                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
-                .map(BookingMapper::bookingToDtoItem)
-                .orElse(null);
-        BookingDtoItem nextBooking = bookings.stream()
-                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                .min((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
-                .map(BookingMapper::bookingToDtoItem).orElse(null);
-        itemDto.setLastBooking(lastBooking);
-        itemDto.setNextBooking(nextBooking);
-        return itemDto;
+        return itemService.search(text, userId).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 }

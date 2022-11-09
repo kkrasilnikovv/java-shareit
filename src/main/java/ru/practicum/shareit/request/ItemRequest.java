@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -9,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "requests", schema = "public")
 @NoArgsConstructor
 public class ItemRequest {

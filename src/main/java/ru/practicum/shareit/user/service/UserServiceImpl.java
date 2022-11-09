@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -12,14 +12,10 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.List;
 
 @Service
-
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<User> findAll() {
@@ -27,33 +23,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    @Transactional
+    public User add(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    @Transactional
+    public User update(Long id, User user) {
         User oldUser = userRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Пользователь с id " + id + " не найден."));
         User updUser = user;
-        if (updUser.getName() != null) {
+        if (updUser.getName() != null && !updUser.getName().isBlank()) {
             oldUser.setName(updUser.getName());
         }
         if (updUser.getEmail() != null) {
             oldUser.setEmail(updUser.getEmail());
         }
-        return userRepository.save(oldUser);
+        return oldUser;
     }
 
     @Override
-    public User findUserById(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Пользователь с id " + id + " не найден."));
     }
 
     @Override
     @Transactional
-    public void deleteUserById(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 

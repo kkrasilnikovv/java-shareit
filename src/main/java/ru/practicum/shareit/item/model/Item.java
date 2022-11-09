@@ -1,14 +1,16 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
-
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "items")
 @AllArgsConstructor
@@ -28,7 +30,35 @@ public class Item {
     @Column(name = "is_available", nullable = false)
     private Boolean available;
 
-    @Column(name = "owner_id", nullable = false)
-    private Long owner;
+    @OneToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private User owner;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "last_booking", referencedColumnName = "id")
+    private Booking lastBooking;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "next_booking", referencedColumnName = "id")
+    private Booking nextBooking;
+
+    @OneToMany
+    @JoinTable(name = "item_comments")
+    private List<Comment> comments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return name.equals(item.name) && description.equals(item.description) &&
+                available.equals(item.available) && owner.equals(item.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, available, owner);
+    }
 }

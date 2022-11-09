@@ -13,13 +13,13 @@ public interface BookingService {
 
     Booking approveStatus(Long userId, Long bookingId, Boolean approved);
 
-    Booking findBookingById(Long userId, Long bookingId);
+    Booking findById(Long userId, Long bookingId);
 
-    List<Booking> findBookingAll(Long bookerId, State state);
+    List<Booking> findAll(Long bookerId, State state);
 
-    List<Booking> findBookingAllByOwner(Long ownerId, State state);
+    List<Booking> findAllByOwner(Long ownerId, State state);
 
-    void checkBookingAllByItemAndBooker(Long itemId, Long bookerId);
+    void checkAllByItemAndBooker(Long itemId, Long bookerId);
 
-    List<Booking> findAllByItem(Item item);
+    void setLastAndNextBooking(Item item);
 }

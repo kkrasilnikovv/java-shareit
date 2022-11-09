@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.State;
-import ru.practicum.shareit.exception.BookingDtoBadStateException;
+import ru.practicum.shareit.exception.ValidationException;
 
 @UtilityClass
 public class StateMapper {
@@ -11,7 +11,7 @@ public class StateMapper {
         try {
             stateEnum = State.valueOf(text.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new BookingDtoBadStateException("Unknown state: " + text);
+            throw new ValidationException("Unknown state: " + text);
         }
         return stateEnum;
     }

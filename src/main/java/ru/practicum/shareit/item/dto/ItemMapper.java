@@ -4,29 +4,56 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 @Component
 public class ItemMapper {
 
-    public static Item dtoToItem(ItemDto itemDto) {
+    public static Item dtoToItem(ItemRequestDto itemRequestDto) {
         return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
+                .id(null)
+                .name(itemRequestDto.getName())
+                .description(itemRequestDto.getDescription())
+                .available(itemRequestDto.getAvailable())
                 .build();
     }
 
     public static ItemDto itemToDto(Item item) {
-        return ItemDto.builder()
+        ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .owner(item.getOwner())
+                .owner(ItemDto.Owner.builder()
+                        .id(item.getOwner().getId())
+                        .name(item.getOwner().getName())
+                        .build())
                 .lastBooking(null)
                 .nextBooking(null)
-                .comments(null)
+                .comments(Collections.emptyList())
                 .build();
+        if (item.getLastBooking() != null) {
+            itemDto.setLastBooking(ItemDto.Booking.builder()
+                    .id(item.getLastBooking().getId())
+                    .bookerId(item.getLastBooking().getBooker().getId())
+                    .build());
+        }
+        if (item.getNextBooking() != null) {
+            itemDto.setNextBooking(ItemDto.Booking.builder()
+                    .id(item.getNextBooking().getId())
+                    .bookerId(item.getNextBooking().getBooker().getId())
+                    .build());
+        }
+        if (item.getComments() != null && !item.getComments().isEmpty()) {
+            itemDto.setComments(item.getComments().stream().
+                    map(x -> ItemDto.Comment.builder().id(x.getId())
+                            .authorName(x.getAuthor().getName())
+                            .text(x.getText())
+                            .created(x.getCreated())
+                            .build()).collect(Collectors.toList()));
+        }
+        return itemDto;
     }
 
     public static CommentDto commentToDto(Comment comment) {

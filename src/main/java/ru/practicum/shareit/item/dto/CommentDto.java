@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.exception.validatedGroup.Create;
+import ru.practicum.shareit.exception.validatedGroup.Update;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -16,7 +18,7 @@ public class CommentDto {
 
     private Long id;
 
-    @NotBlank
+    @NotBlank(groups = {Create.class, Update.class})
     private String text;
 
     private Long itemId;
