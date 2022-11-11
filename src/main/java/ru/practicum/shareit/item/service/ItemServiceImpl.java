@@ -13,7 +13,9 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,9 +31,9 @@ public class ItemServiceImpl implements ItemService, CommentService {
     public List<Item> findAll(Long userId) {
         List<Item> items = itemRepository.findByOwner(userService.findById(userId));
         for (Item item : items) {
-            item.setComments(commentRepository.findAllByItem(item));
+            item.setComments(findCommentsByItem(item));
         }
-        return items;
+        return items.stream().sorted(Comparator.comparing(Item::getId)).collect(Collectors.toList());
     }
 
     @Override
@@ -45,7 +47,7 @@ public class ItemServiceImpl implements ItemService, CommentService {
     public Item findById(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Объект с id " + id + " не найден."));
-        item.setComments(commentRepository.findAllByItem(item));
+        item.setComments(findCommentsByItem(item));
         return item;
     }
 
@@ -71,7 +73,8 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
     @Override
     public List<Item> search(String str, Long userId) {
-        return itemRepository.search(str);
+        List<Item> items= itemRepository.findAllByNameIsContainingIgnoreCase(str);
+        return items;
     }
 
     @Override

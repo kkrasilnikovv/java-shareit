@@ -29,7 +29,6 @@ public class ItemController {
     private final BookingService bookingService;
     private final CommentService commentService;
 
-
     @GetMapping
     public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
         List<Item> items = itemService.findAll(userId);

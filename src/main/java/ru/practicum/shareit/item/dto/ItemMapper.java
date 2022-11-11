@@ -16,6 +16,10 @@ public class ItemMapper {
                 .name(itemRequestDto.getName())
                 .description(itemRequestDto.getDescription())
                 .available(itemRequestDto.getAvailable())
+                .owner(null)
+                .lastBooking(null)
+                .nextBooking(null)
+                .comments(null)
                 .build();
     }
 

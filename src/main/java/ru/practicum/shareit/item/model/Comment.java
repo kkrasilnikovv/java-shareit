@@ -22,11 +22,9 @@ public class Comment {
     @Column(name = "text")
     private String text;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     private Item item;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
     @Column(name = "created")

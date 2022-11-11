@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.user.model.User;
@@ -21,31 +20,26 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "name",nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 512)
+    @Column(name = "description",nullable = false, length = 512)
     private String description;
 
     @Column(name = "is_available", nullable = false)
     private Boolean available;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "last_booking", referencedColumnName = "id")
+    @Transient
     private Booking lastBooking;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "next_booking", referencedColumnName = "id")
+    @Transient
     private Booking nextBooking;
 
-    @OneToMany
-    @JoinTable(name = "item_comments")
+    @Transient
     private List<Comment> comments;
 
     @Override
