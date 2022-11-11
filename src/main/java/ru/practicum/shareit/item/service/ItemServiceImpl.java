@@ -88,5 +88,4 @@ public class ItemServiceImpl implements ItemService, CommentService {
     public List<Comment> findCommentsByItem(Item item) {
         return commentRepository.findAllByItem(item);
     }
-
 }
