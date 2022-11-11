@@ -73,8 +73,7 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
     @Override
     public List<Item> search(String str, Long userId) {
-        List<Item> items= itemRepository.findAllByNameIsContainingIgnoreCase(str);
-        return items;
+        return itemRepository.search(str);
     }
 
     @Override
