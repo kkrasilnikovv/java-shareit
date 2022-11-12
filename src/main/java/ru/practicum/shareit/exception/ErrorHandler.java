@@ -3,34 +3,60 @@ package ru.practicum.shareit.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler
-    public ResponseEntity<String> handlerBadValidation(final ValidationException e) {
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorMessage> handlerBadValidation(final ValidationException e) {
         log.error("Возникла ошибка валидации. Ошибка:" + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessage(e.getMessage()));
     }
 
 
-    @ExceptionHandler
-    public ResponseEntity<String> handlerNotFound(final NotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorMessage> handlerNotFound(final NotFoundException e) {
         log.error("Возникла ошибка не найденного объекта. Ошибка:" + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorMessage(e.getMessage()));
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> handlerConflictData(final ConflictDataException e) {
+    @ExceptionHandler(ConflictDataException.class)
+    public ResponseEntity<ErrorMessage> handlerConflictData(final ConflictDataException e) {
         log.error("Возникла ошибка конфликтных данных. Ошибка:" + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorMessage(e.getMessage()));
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> handlerForbidden(final ForbiddenException e) {
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorMessage> handlerForbidden(final ForbiddenException e) {
         log.error("Возникла ошибка запрещенных данных. Ошибка:" + e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessage> handlerArgumentNotValid(final MethodArgumentNotValidException e) {
+        log.error("Возникла ошибка валидации данных. Ошибка:" + e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessage(e.getMessage()));
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorMessage> handlerThrowableDefault(final Throwable e) {
+        log.error("Возникла ошибка. Ошибка:" + e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorMessage(e.getMessage()));
     }
 }
