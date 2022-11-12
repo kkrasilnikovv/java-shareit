@@ -8,7 +8,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.validatedGroup.Create;
 import ru.practicum.shareit.exception.validatedGroup.Update;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemRequestDto;
+import ru.practicum.shareit.item.dto.RequestItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
@@ -32,34 +32,27 @@ public class ItemController {
     @GetMapping
     public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
         List<Item> items = itemService.findAll(userId);
-        for (Item item : items) {
-            if (item.getOwner().getId().equals(userId)) {
-                bookingService.setLastAndNextBooking(item);
-            }
-        }
+        bookingService.setLastAndNextBooking(items, userId);
         return items.stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 
     @PostMapping
     public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                           @Validated(Create.class) @RequestBody ItemRequestDto itemDto) {
+                           @Validated(Create.class) @RequestBody RequestItemDto itemDto) {
         return ItemMapper.itemToDto(itemService.add(userId, ItemMapper.dtoToItem(itemDto)));
     }
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@PathVariable Long id,
                               @RequestHeader("X-Sharer-User-Id") Long userId,
-                              @Validated(Update.class) @RequestBody ItemRequestDto itemDto) {
-
+                              @Validated(Update.class) @RequestBody RequestItemDto itemDto) {
         return ItemMapper.itemToDto(itemService.update(id, userId, ItemMapper.dtoToItem(itemDto)));
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         Item item = itemService.findById(itemId);
-        if (item.getOwner().getId().equals(userId)) {
-            bookingService.setLastAndNextBooking(item);
-        }
+        bookingService.setLastAndNextBooking(List.of(item), userId);
         return ItemMapper.itemToDto(item);
     }
 

@@ -21,5 +21,5 @@ public interface BookingService {
 
     void checkAllByItemAndBooker(Long itemId, Long bookerId);
 
-    void setLastAndNextBooking(Item item);
+    void setLastAndNextBooking(List<Item> items, Long userId);
 }

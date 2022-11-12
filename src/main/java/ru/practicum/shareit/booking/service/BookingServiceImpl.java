@@ -17,7 +17,10 @@ import ru.practicum.shareit.user.service.UserService;
 
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,9 @@ public class BookingServiceImpl implements BookingService {
         if (item.getOwner().getId().equals(userId)) {
             throw new NotFoundException("Запрещено брать вещи в аренду у самого себя.");
         }
+        if (!booking.getEnd().isAfter(booking.getStart())) {
+            throw new ValidationException("Начало аренды не может быть раньше ее конца.");
+        }
         if (item.getAvailable()) {
             booking.setItem(item);
             booking.setBooker(userService.findById(userId));
@@ -42,11 +48,6 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new ValidationException("Объект с id " + itemId + " не доступен.");
         }
-        if (booking.getEnd().isBefore(booking.getStart()) || booking.getEnd().isBefore(LocalDateTime.now())
-                || booking.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Начало аренды не может быть раньше ее конца.");
-        }
-
         return bookingRepository.save(booking);
     }
 
@@ -67,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-        return bookingRepository.save(booking);
+        return booking;
     }
 
     @Override
@@ -83,48 +84,68 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> findAll(Long bookerId, State state) {
         User booker = userService.findById(bookerId);
-        if (state.equals(State.CURRENT)) {
-            return bookingRepository.findCurrentBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.PAST)) {
-            return bookingRepository.findPastBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.WAITING)) {
-            return bookingRepository.findWaitingBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.REJECTED)) {
-            return bookingRepository.findRejectedBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.FUTURE)) {
-            return bookingRepository.findFutureBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else {
-            return bookingRepository.findAllBookingByBooker(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
+        switch (state) {
+            case CURRENT: {
+                return bookingRepository.findCurrentBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case PAST: {
+                return bookingRepository.findPastBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case WAITING: {
+                return bookingRepository.findWaitingBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case REJECTED: {
+                return bookingRepository.findRejectedBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case FUTURE: {
+                return bookingRepository.findFutureBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case ALL: {
+                return bookingRepository.findAllBookingByBooker(booker,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            default: {
+                return Collections.emptyList();
+            }
         }
     }
 
     @Override
     public List<Booking> findAllByOwner(Long ownerId, State state) {
-        User booker = userService.findById(ownerId);
-        if (state.equals(State.CURRENT)) {
-            return bookingRepository.findCurrentBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.PAST)) {
-            return bookingRepository.findPastBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.WAITING)) {
-            return bookingRepository.findWaitingBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.REJECTED)) {
-            return bookingRepository.findRejectedBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else if (state.equals(State.FUTURE)) {
-            return bookingRepository.findFutureBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
-        } else {
-            return bookingRepository.findAllBookingByOwner(booker,
-                    Sort.by(Sort.Direction.DESC, "start"));
+        User owner = userService.findById(ownerId);
+        switch (state) {
+            case CURRENT: {
+                return bookingRepository.findCurrentBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case PAST: {
+                return bookingRepository.findPastBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case WAITING: {
+                return bookingRepository.findWaitingBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case REJECTED: {
+                return bookingRepository.findRejectedBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case FUTURE: {
+                return bookingRepository.findFutureBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            case ALL: {
+                return bookingRepository.findAllBookingByOwner(owner,
+                        Sort.by(Sort.Direction.DESC, "start"));
+            }
+            default: {
+                return Collections.emptyList();
+            }
         }
     }
 
@@ -151,20 +172,22 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public void setLastAndNextBooking(Item item) {
-        List<Booking> bookings = bookingRepository.findAllByItem(item);
-        if (bookings.isEmpty()) {
-            return;
+    public void setLastAndNextBooking(List<Item> items, Long userId) {
+        Map<Item, List<Booking>> bookingsHasItem = bookingRepository.findAllByItemInAndStatusIsAPPROVED(items)
+                .stream().collect(Collectors.groupingBy(Booking::getItem, Collectors.toList()));
+        for (Item item : bookingsHasItem.keySet()) {
+            if (item.getOwner().getId().equals(userId)) {
+                Booking lastBooking = bookingsHasItem.get(item).stream()
+                        .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                        .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
+                        .orElse(null);
+                Booking nextBooking = bookingsHasItem.get(item).stream()
+                        .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                        .min((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
+                        .orElse(null);
+                item.setLastBooking(lastBooking);
+                item.setNextBooking(nextBooking);
+            }
         }
-        Booking lastBooking = bookings.stream()
-                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .max((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
-                .orElse(null);
-        Booking nextBooking = bookings.stream()
-                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                .min((booking, booking1) -> booking1.getStart().compareTo(booking.getStart()))
-                .orElse(null);
-        item.setLastBooking(lastBooking);
-        item.setNextBooking(nextBooking);
     }
 }

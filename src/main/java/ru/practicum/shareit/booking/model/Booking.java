@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -28,12 +27,10 @@ public class Booking {
     private LocalDateTime end;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     private Item item;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "booker_id", referencedColumnName = "id")
     private User booker;
 

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.*;
+import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.validatedGroup.Create;
 
@@ -43,14 +44,14 @@ public class BookingController {
     @GetMapping()
     public List<BookingDtoUser> findAll(@RequestHeader("X-Sharer-User-Id") Long bookerId,
                                         @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.findAll(bookerId, StateMapper.mapStatus(state)).stream()
+        return bookingService.findAll(bookerId, State.mapStatus(state)).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }
 
     @GetMapping("/owner")
     public List<BookingDtoUser> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                                @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.findAllByOwner(ownerId, StateMapper.mapStatus(state)).stream()
+        return bookingService.findAllByOwner(ownerId, State.mapStatus(state)).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }
 }

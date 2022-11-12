@@ -13,9 +13,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByItem_IdAndBooker_Id(Long itemId, Long bookerId);
 
-    List<Booking> findAllByItem(Item item);
+    @Query("select b from Booking b where b.item in ?1 and b.status = 'APPROVED'")
+    List<Booking> findAllByItemInAndStatusIsAPPROVED(List<Item> items);
 
-    @Query("select b from Booking b where b.booker=?1 and b.start < current_timestamp and b.end > current_timestamp")
+    @Query("select b from Booking b where b.booker=?1 and current_timestamp between b.start and b.end")
     List<Booking> findCurrentBookingByBooker(User booker, Sort sort);
 
     @Query("select b from Booking b where b.booker=?1 and b.end < current_timestamp")
@@ -33,7 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.booker=?1")
     List<Booking> findAllBookingByBooker(User booker, Sort sort);
 
-    @Query("select b from Booking b where b.item.owner=?1 and b.start < current_timestamp and b.end > current_timestamp")
+    @Query("select b from Booking b where b.item.owner=?1 and current_timestamp between b.start and b.end")
     List<Booking> findCurrentBookingByOwner(User owner, Sort sort);
 
     @Query("select b from Booking b where b.item.owner=?1 and b.end < current_timestamp")

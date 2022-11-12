@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -29,11 +28,12 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
     @Override
     public List<Item> findAll(Long userId) {
-        List<Item> items = itemRepository.findByOwner(userService.findById(userId));
+        List<Item> items = itemRepository.findByOwner(userService.findById(userId),
+                Sort.by(Sort.Direction.ASC, "id"));
         for (Item item : items) {
             item.setComments(findCommentsByItem(item));
         }
-        return items.stream().sorted(Comparator.comparing(Item::getId)).collect(Collectors.toList());
+        return items;
     }
 
     @Override

@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 @Component
 public class ItemMapper {
 
-    public static Item dtoToItem(ItemRequestDto itemRequestDto) {
+    public static Item dtoToItem(RequestItemDto requestItemDto) {
         return Item.builder()
                 .id(null)
-                .name(itemRequestDto.getName())
-                .description(itemRequestDto.getDescription())
-                .available(itemRequestDto.getAvailable())
+                .name(requestItemDto.getName())
+                .description(requestItemDto.getDescription())
+                .available(requestItemDto.getAvailable())
                 .owner(null)
                 .lastBooking(null)
                 .nextBooking(null)
@@ -79,5 +79,4 @@ public class ItemMapper {
                 .created(commentDto.getCreated())
                 .build();
     }
-
 }
