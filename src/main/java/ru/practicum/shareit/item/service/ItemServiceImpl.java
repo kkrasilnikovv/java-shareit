@@ -73,8 +73,7 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
     @Override
     public List<Item> search(String str, Long userId) {
-        return itemRepository.search(str).stream().sorted(Comparator.comparing(Item::getId))
-                .collect(Collectors.toList());
+        return itemRepository.search(str).stream().limit(1).collect(Collectors.toList());
     }
 
     @Override
