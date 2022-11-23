@@ -15,7 +15,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
-import ru.practicum.shareit.user.service.UserServiceImpl;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 
 import java.util.ArrayList;
@@ -39,18 +39,19 @@ public class ItemServiceTest {
     @MockBean
     private final ItemRepository itemRepository;
     @MockBean
-    private final UserServiceImpl userService;
+    private final UserRepository userRepository;
 
     @BeforeEach
     public void init() {
-        when(userService.findById(1L)).thenReturn(User1);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(User1));
         when(itemRepository.findById(1L)).thenReturn(Optional.of(Item1));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(Item2));
-        when(userService.findById(11L)).thenThrow(NotFoundException.class);
+        when(userRepository.findById(11L)).thenThrow(NotFoundException.class);
     }
     @AfterEach
     void tearDown() {
         itemRepository.deleteAll();
+        userRepository.deleteAll();
     }
     @Test
     void testCreate() {
