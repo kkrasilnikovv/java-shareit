@@ -42,6 +42,9 @@ public class Item {
     @Transient
     private List<Comment> comments;
 
+    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    private Long requestId;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
@@ -17,38 +18,38 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByItemInAndStatusIsAPPROVED(List<Item> items);
 
     @Query("select b from Booking b where b.booker=?1 and current_timestamp between b.start and b.end")
-    List<Booking> findCurrentBookingByBooker(User booker, Sort sort);
+    Page<Booking> findCurrentBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.booker=?1 and b.end < current_timestamp")
-    List<Booking> findPastBookingByBooker(User booker, Sort sort);
+    Page<Booking> findPastBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.booker=?1 and b.status = 'WAITING'")
-    List<Booking> findWaitingBookingByBooker(User booker, Sort sort);
+    Page<Booking> findWaitingBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.booker=?1 and (b.status = 'CANCELED' or b.status = 'REJECTED')")
-    List<Booking> findRejectedBookingByBooker(User booker, Sort sort);
+    Page<Booking> findRejectedBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.booker=?1 and b.start>current_timestamp")
-    List<Booking> findFutureBookingByBooker(User booker, Sort sort);
+    Page<Booking> findFutureBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.booker=?1")
-    List<Booking> findAllBookingByBooker(User booker, Sort sort);
+    Page<Booking> findAllBookingByBooker(User booker, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1 and current_timestamp between b.start and b.end")
-    List<Booking> findCurrentBookingByOwner(User owner, Sort sort);
+    Page<Booking> findCurrentBookingByOwner(User owner, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1 and b.end < current_timestamp")
-    List<Booking> findPastBookingByOwner(User owner, Sort sort);
+    Page<Booking> findPastBookingByOwner(User owner, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1 and b.status = 'WAITING'")
-    List<Booking> findWaitingBookingByOwner(User owner, Sort sort);
+    Page<Booking> findWaitingBookingByOwner(User owner, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1 and (b.status = 'CANCELED' or b.status = 'REJECTED')")
-    List<Booking> findRejectedBookingByOwner(User owner, Sort sort);
+    Page<Booking> findRejectedBookingByOwner(User owner, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1 and b.start>current_timestamp")
-    List<Booking> findFutureBookingByOwner(User owner, Sort sort);
+    Page<Booking> findFutureBookingByOwner(User owner, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner=?1")
-    List<Booking> findAllBookingByOwner(User owner, Sort sort);
+    Page<Booking> findAllBookingByOwner(User owner, Pageable pageable);
 }

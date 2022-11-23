@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +28,9 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
 
     @Override
-    public List<Item> findAll(Long userId) {
+    public List<Item> findAll(Long userId, Integer from, Integer size) {
         List<Item> items = itemRepository.findByOwner(userService.findById(userId),
-                Sort.by(Sort.Direction.ASC, "id"));
+                PageRequest.of(from, size, Sort.by("id")));
         for (Item item : items) {
             item.setComments(findCommentsByItem(item));
         }
@@ -72,8 +73,8 @@ public class ItemServiceImpl implements ItemService, CommentService {
     }
 
     @Override
-    public List<Item> search(String str, Long userId) {
-        return itemRepository.search(str);
+    public List<Item> search(String text, Long userId, Integer from, Integer size) {
+        return itemRepository.search(text,PageRequest.of(from, size, Sort.by("id")));
     }
 
     @Override
@@ -87,5 +88,9 @@ public class ItemServiceImpl implements ItemService, CommentService {
     @Override
     public List<Comment> findCommentsByItem(Item item) {
         return commentRepository.findAllByItem(item);
+    }
+    @Override
+    public List<Item> findByRequestId(Long requestId){
+        return itemRepository.findByRequestId(requestId);
     }
 }

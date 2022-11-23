@@ -20,6 +20,7 @@ public class ItemMapper {
                 .lastBooking(null)
                 .nextBooking(null)
                 .comments(null)
+                .requestId(requestItemDto.getRequestId())
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class ItemMapper {
                 .lastBooking(null)
                 .nextBooking(null)
                 .comments(Collections.emptyList())
+                .requestId(item.getRequestId())
                 .build();
         if (item.getLastBooking() != null) {
             itemDto.setLastBooking(ItemDto.Booking.builder()

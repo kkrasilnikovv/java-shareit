@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.validatedGroup.Create;
 import ru.practicum.shareit.exception.validatedGroup.Update;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -30,8 +31,14 @@ public class ItemController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        List<Item> items = itemService.findAll(userId);
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                @RequestParam(defaultValue = "0") Integer from,
+                                @RequestParam(defaultValue = "10") Integer size) {
+        if (from < 0 || size == 0) {
+            throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
+                    " ,кол-во элементов на странице " + size);
+        }
+        List<Item> items = itemService.findAll(userId, from, size);
         bookingService.setLastAndNextBooking(items, userId);
         return items.stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
@@ -66,10 +73,12 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String text,
-                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                @RequestHeader("X-Sharer-User-Id") Long userId,
+                                @RequestParam(defaultValue = "0") Integer from,
+                                @RequestParam(defaultValue = "10") Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemService.search(text, userId).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
+        return itemService.search(text, userId,from,size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 }

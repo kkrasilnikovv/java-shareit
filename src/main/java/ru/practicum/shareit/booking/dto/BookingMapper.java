@@ -17,27 +17,20 @@ public class BookingMapper {
                 .build();
     }
 
-    public static BookingDtoUser bookingToDtoUser(Booking booking) {
-        return BookingDtoUser.builder()
+    public static BookingDto bookingToDtoUser(Booking booking) {
+        return BookingDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .item(BookingDtoUser.Item.builder()
+                .item(BookingDto.Item.builder()
                         .id(booking.getItem().getId())
                         .name(booking.getItem().getName())
                         .build())
-                .booker(BookingDtoUser.Booker.builder()
+                .booker(BookingDto.Booker.builder()
                         .id(booking.getBooker().getId())
                         .name(booking.getBooker().getName())
                         .build())
                 .status(booking.getStatus())
-                .build();
-    }
-
-    public static BookingDtoItem bookingToDtoItem(Booking booking) {
-        return BookingDtoItem.builder()
-                .id(booking.getId())
-                .bookerId(booking.getBooker().getId())
                 .build();
     }
 }
