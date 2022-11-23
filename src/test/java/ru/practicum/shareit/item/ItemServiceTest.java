@@ -48,11 +48,13 @@ public class ItemServiceTest {
         when(itemRepository.findById(2L)).thenReturn(Optional.of(Item2));
         when(userRepository.findById(11L)).thenThrow(NotFoundException.class);
     }
+
     @AfterEach
     void tearDown() {
         itemRepository.deleteAll();
         userRepository.deleteAll();
     }
+
     @Test
     void testCreate() {
         itemService.add(1L, Item1);

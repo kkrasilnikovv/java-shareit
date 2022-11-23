@@ -28,12 +28,14 @@ public class ItemRepositoryTest {
     private ItemRepository itemRepository;
     @MockBean
     private UserRepository userRepository;
+
     @BeforeEach
     public void init() {
         when(itemRepository.findById(1L)).thenReturn(Optional.of(Item1));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(Item2));
         when(userRepository.findById(1L)).thenReturn(Optional.of(User1));
     }
+
     @AfterEach
     void tearDown() {
         itemRepository.deleteAll();

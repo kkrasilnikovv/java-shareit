@@ -18,7 +18,7 @@ public class BookingDtoJsonTest {
     @Autowired
     private JacksonTester<BookingDto> json;
     private final String dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
-    private final DateTimeFormatter DateFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
 
     @Test
     void testSerialize() throws Exception {
@@ -46,9 +46,9 @@ public class BookingDtoJsonTest {
         assertThat(result).hasJsonPath("$.status");
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(dto.getId().intValue());
         assertThat(result).extractingJsonPathStringValue("$.start")
-                .isEqualTo(dto.getStart().format(DateFormatter));
+                .isEqualTo(dto.getStart().format(dateFormatter));
         assertThat(result).extractingJsonPathStringValue("$.end")
-                .isEqualTo(dto.getEnd().format(DateFormatter));
+                .isEqualTo(dto.getEnd().format(dateFormatter));
         assertThat(result).extractingJsonPathNumberValue("$.item.id")
                 .isEqualTo((int) dto.getItem().getId());
         assertThat(result).extractingJsonPathStringValue("$.item.name")
@@ -79,8 +79,8 @@ public class BookingDtoJsonTest {
         assertThat(result).doesNotHaveJsonPathValue("$.booker");
         assertThat(result).doesNotHaveJsonPathValue("$.status");
         assertThat(result).extractingJsonPathStringValue("$.start")
-                .isEqualTo(dto.getStart().format(DateFormatter));
+                .isEqualTo(dto.getStart().format(dateFormatter));
         assertThat(result).extractingJsonPathStringValue("$.end")
-                .isEqualTo(dto.getEnd().format(DateFormatter));
+                .isEqualTo(dto.getEnd().format(dateFormatter));
     }
 }

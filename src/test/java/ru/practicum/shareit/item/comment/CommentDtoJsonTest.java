@@ -17,7 +17,7 @@ public class CommentDtoJsonTest {
     private JacksonTester<CommentDto> json;
     private final String dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private final DateTimeFormatter DateFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
 
     @Test
     void testSerialize() throws Exception {
@@ -34,7 +34,7 @@ public class CommentDtoJsonTest {
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(dto.getId().intValue());
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo(dto.getAuthorName());
         assertThat(result).extractingJsonPathStringValue("$.created")
-                .isEqualTo(dto.getCreated().format(DateFormatter));
+                .isEqualTo(dto.getCreated().format(dateFormatter));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CommentDtoJsonTest {
         assertThat(result).hasJsonPath("$.created");
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo(dto.getAuthorName());
         assertThat(result).extractingJsonPathStringValue("$.created")
-                .isEqualTo(dto.getCreated().format(DateFormatter));
+                .isEqualTo(dto.getCreated().format(dateFormatter));
 
     }
 }
