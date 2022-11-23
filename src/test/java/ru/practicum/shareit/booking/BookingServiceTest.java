@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,11 @@ public class BookingServiceTest {
         when(userService.findById(2L)).thenReturn(User2);
     }
 
+    @AfterEach
+    public void past() {
+        Booking1.setStatus(Status.WAITING);
+    }
+
     @Test
     void testGetBookingById() {
         Booking bookingDtoFromSQL = bookingService.findById(1L, 1L);
@@ -83,6 +89,7 @@ public class BookingServiceTest {
     }
 
     @Test
+    @DirtiesContext
     void testApproveStatus() {
         Booking booking = bookingService.approveStatus(1L, 1L, true);
         assertThat(booking.getStatus(), equalTo(Status.APPROVED));
@@ -91,6 +98,8 @@ public class BookingServiceTest {
     @Test
     @DirtiesContext
     void testRejectedStatusFail() {
+        bookingService
+                .approveStatus(1L, 1L, true);
         assertThrows(ValidationException.class, () -> bookingService
                 .approveStatus(1L, 1L, false));
     }

@@ -26,7 +26,7 @@ public class BookingTestData {
             .end(LocalDateTime.of(2022, 12, 1, 12, 15))
             .item(Item1)
             .booker(User1)
-            .status(Status.APPROVED)
+            .status(Status.WAITING)
             .build();
     public static final BookingDto BookingDto1 = BookingDto.builder()
             .id(1L)
@@ -40,7 +40,7 @@ public class BookingTestData {
                     .id(1L)
                     .name("user1")
                     .build())
-            .status(Status.APPROVED)
+            .status(Status.WAITING)
             .build();
     public static final BookingRequestDto BookingRequestDto1 = new BookingRequestDto(1L,
             LocalDateTime.of(2022, 12, 1, 12, 10),
