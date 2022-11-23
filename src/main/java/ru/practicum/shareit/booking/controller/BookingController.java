@@ -51,7 +51,7 @@ public class BookingController {
             throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
                     " ,кол-во элементов на странице " + size);
         }
-        return bookingService.findAll(bookerId, State.mapStatus(state),from,size).stream()
+        return bookingService.findAll(bookerId, State.mapStatus(state), from, size).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }
 
@@ -59,12 +59,12 @@ public class BookingController {
     public List<BookingDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                            @RequestParam(defaultValue = "ALL") String state,
                                            @RequestParam(defaultValue = "1") Integer from,
-                                           @RequestParam(defaultValue = "10") Integer size){
+                                           @RequestParam(defaultValue = "10") Integer size) {
         if (from < 0 || size == 0) {
             throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
                     " ,кол-во элементов на странице " + size);
         }
-        return bookingService.findAllByOwner(ownerId, State.mapStatus(state),from,size).stream()
+        return bookingService.findAllByOwner(ownerId, State.mapStatus(state), from, size).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }
 }

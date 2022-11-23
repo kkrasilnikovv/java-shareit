@@ -31,11 +31,13 @@ public class UserServiceTest {
     private UserService userService;
     @MockBean
     private UserRepository userRepository;
+
     @BeforeEach
-    public void init(){
+    public void init() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(User1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(User2));
     }
+
     @Test
     @DirtiesContext
     void testCreate() {
@@ -46,7 +48,7 @@ public class UserServiceTest {
     @Test
     @DirtiesContext
     void testGetAll() {
-        when(userRepository.findAll()).thenReturn(List.of(User1,User2));
+        when(userRepository.findAll()).thenReturn(List.of(User1, User2));
         List<User> users = userService.findAll();
         assertThat(users.size(), equalTo(2));
         assertThat(users, equalTo(List.of(User1, User2)));
@@ -83,7 +85,7 @@ public class UserServiceTest {
         User UserFromSQL = userService.update(2L, User2);
         User2.setEmail("user2@mail.ru");
         User2.setName("user2");
-       assertThat(UserFromSQL, equalTo(User2));
+        assertThat(UserFromSQL, equalTo(User2));
 
     }
 
@@ -111,6 +113,4 @@ public class UserServiceTest {
     void testDeleteWrongId() {
         assertThrows(NotFoundException.class, () -> userService.deleteById(100L));
     }
-
-
 }

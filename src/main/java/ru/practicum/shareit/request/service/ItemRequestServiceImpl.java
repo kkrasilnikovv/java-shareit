@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,7 +21,6 @@ import java.util.List;
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserService userService;
-
 
     @Transactional
     @Override
@@ -36,7 +33,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequest> getAll(Long sharerUserId, Integer from, Integer size) {
         userService.findById(sharerUserId);
-        return itemRequestRepository.findAll(sharerUserId,PageRequest
+        return itemRequestRepository.findAll(sharerUserId, PageRequest
                 .of(from / size, size, Sort.by(Sort.Direction.DESC, "created")));
     }
 

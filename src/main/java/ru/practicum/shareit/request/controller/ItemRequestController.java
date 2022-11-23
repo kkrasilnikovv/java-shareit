@@ -40,7 +40,7 @@ public class ItemRequestController {
             throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
                     " ,кол-во элементов на странице " + size);
         }
-        List<ItemRequest> itemRequests =  itemRequestService.getAll(sharerUserId, from, size);
+        List<ItemRequest> itemRequests = itemRequestService.getAll(sharerUserId, from, size);
         for (ItemRequest itemRequest : itemRequests) {
             itemRequest.setItems(itemService.findByRequestId(itemRequest.getId()));
         }

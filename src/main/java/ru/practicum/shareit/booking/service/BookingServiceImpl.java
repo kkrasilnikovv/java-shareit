@@ -88,27 +88,27 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case CURRENT: {
                 return bookingRepository.findCurrentBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case PAST: {
                 return bookingRepository.findPastBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case WAITING: {
                 return bookingRepository.findWaitingBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case REJECTED: {
                 return bookingRepository.findRejectedBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case FUTURE: {
                 return bookingRepository.findFutureBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case ALL: {
                 List<Booking> b = bookingRepository.findAllBookingByBooker(booker,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
                 return b;
             }
             default: {
@@ -123,27 +123,27 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case CURRENT: {
                 return bookingRepository.findCurrentBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case PAST: {
                 return bookingRepository.findPastBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case WAITING: {
                 return bookingRepository.findWaitingBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case REJECTED: {
                 return bookingRepository.findRejectedBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case FUTURE: {
                 return bookingRepository.findFutureBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case ALL: {
                 return bookingRepository.findAllBookingByOwner(owner,
-                        PageRequest.of(from/size, size, Sort.by("start").descending())).toList();
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             default: {
                 return Collections.emptyList();

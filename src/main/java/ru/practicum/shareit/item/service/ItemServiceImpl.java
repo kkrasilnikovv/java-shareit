@@ -5,18 +5,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.practicum.shareit.exception.NotFoundException;
-
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
-
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +21,6 @@ public class ItemServiceImpl implements ItemService, CommentService {
     private final UserService userService;
     private final ItemRepository itemRepository;
     private final CommentRepository commentRepository;
-
 
     @Override
     public List<Item> findAll(Long userId, Integer from, Integer size) {
@@ -74,7 +69,7 @@ public class ItemServiceImpl implements ItemService, CommentService {
 
     @Override
     public List<Item> search(String text, Long userId, Integer from, Integer size) {
-        return itemRepository.search(text,PageRequest.of(from, size, Sort.by("id")));
+        return itemRepository.search(text, PageRequest.of(from, size, Sort.by("id")));
     }
 
     @Override
@@ -89,8 +84,9 @@ public class ItemServiceImpl implements ItemService, CommentService {
     public List<Comment> findCommentsByItem(Item item) {
         return commentRepository.findAllByItem(item);
     }
+
     @Override
-    public List<Item> findByRequestId(Long requestId){
+    public List<Item> findByRequestId(Long requestId) {
         return itemRepository.findByRequestId(requestId);
     }
 }

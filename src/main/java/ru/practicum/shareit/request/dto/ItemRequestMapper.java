@@ -28,9 +28,9 @@ public class ItemRequestMapper {
                 .items(Collections.emptyList())
                 .created(itemRequest.getCreated())
                 .build();
-        if(itemRequest.getItems()!=null && !itemRequest.getItems().isEmpty()){
+        if (itemRequest.getItems() != null && !itemRequest.getItems().isEmpty()) {
             itemRequestDto.setItems(itemRequest.getItems().stream()
-                    .map(x->ItemRequestDto.Item
+                    .map(x -> ItemRequestDto.Item
                             .builder()
                             .id(x.getId())
                             .name(x.getName())
