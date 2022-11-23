@@ -107,9 +107,8 @@ public class BookingServiceImpl implements BookingService {
                         PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case ALL: {
-                List<Booking> b = bookingRepository.findAllBookingByBooker(booker,
+                return bookingRepository.findAllBookingByBooker(booker,
                         PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
-                return b;
             }
             default: {
                 return Collections.emptyList();

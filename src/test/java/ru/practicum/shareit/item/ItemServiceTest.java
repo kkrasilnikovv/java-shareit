@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 
@@ -48,9 +48,11 @@ public class ItemServiceTest {
         when(itemRepository.findById(2L)).thenReturn(Optional.of(Item2));
         when(userService.findById(11L)).thenThrow(NotFoundException.class);
     }
-
+    @AfterEach
+    void tearDown() {
+        itemRepository.deleteAll();
+    }
     @Test
-    @DirtiesContext
     void testCreate() {
         itemService.add(1L, Item1);
         Item item = itemService.findById(1L);
@@ -58,7 +60,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdate() {
         Item1.setName("new name");
         itemService.update(1L, 1L, Item1);
@@ -68,7 +69,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdateWithNulls() {
         Item1.setName(null);
         Item1.setDescription(null);
@@ -82,7 +82,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdateDescription() {
         Item1.setDescription("new description");
         itemService.update(1L, 1L, Item1);
@@ -92,7 +91,6 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdateAvailable() {
         itemService.add(1L, Item1);
         Item1.setAvailable(false);

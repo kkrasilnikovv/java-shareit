@@ -8,8 +8,9 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.util.List;
 
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
-    List<ItemRequest> findAllByRequestorId(Long id);
+    @Query("select i from ItemRequest i where not i.requestor.id=?1")
+    List<ItemRequest> findAllIdByOtherId(Long id, Pageable pageable);
 
-    @Query("select i from ItemRequest i where not i.requestor.id = ?1")
-    List<ItemRequest> findAll(Long id, Pageable pageable);
+    @Query("select i from ItemRequest i where i.requestor.id=?1")
+    List<ItemRequest> findAllIdByRequestorId(Long id, Pageable pageable);
 }

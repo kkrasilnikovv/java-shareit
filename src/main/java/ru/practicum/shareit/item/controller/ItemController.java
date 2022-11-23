@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.validatedGroup.Create;
 import ru.practicum.shareit.exception.validatedGroup.Update;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -17,12 +16,15 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
@@ -32,12 +34,8 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                @RequestParam(defaultValue = "0") Integer from,
-                                @RequestParam(defaultValue = "10") Integer size) {
-        if (from < 0 || size == 0) {
-            throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
-                    " ,кол-во элементов на странице " + size);
-        }
+                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                @Positive @RequestParam(defaultValue = "10") Integer size) {
         List<Item> items = itemService.findAll(userId, from, size);
         bookingService.setLastAndNextBooking(items, userId);
         return items.stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
@@ -74,11 +72,11 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String text,
                                 @RequestHeader("X-Sharer-User-Id") Long userId,
-                                @RequestParam(defaultValue = "0") Integer from,
-                                @RequestParam(defaultValue = "10") Integer size) {
+                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                @Positive @RequestParam(defaultValue = "10") Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemService.search(text, userId,from,size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
+        return itemService.search(text, userId, from, size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 }

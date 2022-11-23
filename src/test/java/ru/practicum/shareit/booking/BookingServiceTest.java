@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.practicum.shareit.booking.model.Booking;
@@ -54,8 +53,9 @@ public class BookingServiceTest {
     }
 
     @AfterEach
-    public void past() {
+    void tearDown() {
         Booking1.setStatus(Status.WAITING);
+        bookingRepository.deleteAll();
     }
 
     @Test
@@ -76,7 +76,6 @@ public class BookingServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testCreate() {
         Booking booking = bookingService.create(2L, 1L, BookingCreated);
         assertThat(Booking1, equalTo(booking));
@@ -89,20 +88,16 @@ public class BookingServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testApproveStatus() {
         Booking booking = bookingService.approveStatus(1L, 1L, true);
         assertThat(booking.getStatus(), equalTo(Status.APPROVED));
     }
 
     @Test
-    @DirtiesContext
     void testRejectedStatusFail() {
         bookingService
                 .approveStatus(1L, 1L, true);
         assertThrows(ValidationException.class, () -> bookingService
                 .approveStatus(1L, 1L, false));
     }
-
 }
-

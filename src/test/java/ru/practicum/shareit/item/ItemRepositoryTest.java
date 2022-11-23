@@ -1,10 +1,10 @@
 package ru.practicum.shareit.item;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -24,9 +24,12 @@ public class ItemRepositoryTest {
     private ItemRepository itemRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @AfterEach
+    void tearDown() {
+        itemRepository.deleteAll();
+        userRepository.deleteAll();
+    }
     @Test
-    @DirtiesContext
     void testSearch() {
         userRepository.save(User1);
         itemRepository.save(Item2);
@@ -36,7 +39,6 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    @DirtiesContext
     void testFindByOwner() {
         userRepository.save(User1);
         itemRepository.save(Item1);

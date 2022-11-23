@@ -1,12 +1,12 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -38,15 +38,18 @@ public class UserServiceTest {
         when(userRepository.findById(2L)).thenReturn(Optional.of(User2));
     }
 
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
     @Test
-    @DirtiesContext
     void testCreate() {
         userService.add(User1);
         assertThat(userService.findById(1L), equalTo(User1));
     }
 
     @Test
-    @DirtiesContext
     void testGetAll() {
         when(userRepository.findAll()).thenReturn(List.of(User1, User2));
         List<User> users = userService.findAll();
@@ -55,7 +58,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdateUser() {
         User2.setName("User2new");
         User user = userService.update(2L, User2);
@@ -69,7 +71,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void tesUpdateUserEmail() {
         User2.setEmail("User2new@mail.ru");
         User user = userService.update(2L, User2);
@@ -78,7 +79,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testUpdateUserEmailName() {
         User2.setName(null);
         User2.setEmail(null);
@@ -90,7 +90,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testDeleteUser() {
         when(userRepository.findAll()).thenReturn(List.of(User2));
         userService.deleteById(1L);
@@ -98,7 +97,6 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     void testGetUserById() {
         User user = userService.findById(1L);
         assertThat(user, equalTo(User1));

@@ -13,6 +13,8 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -88,5 +90,11 @@ public class ItemServiceImpl implements ItemService, CommentService {
     @Override
     public List<Item> findByRequestId(Long requestId) {
         return itemRepository.findByRequestId(requestId);
+    }
+
+    @Override
+    public Map<Long, List<Item>> findAllByRequests(List<Long> itemRequests) {
+        return itemRepository.findAllByRequests(itemRequests)
+                .stream().collect(Collectors.groupingBy(Item::getRequestId, Collectors.toList()));
     }
 }

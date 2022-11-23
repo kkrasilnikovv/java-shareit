@@ -8,9 +8,9 @@ import java.util.List;
 public interface ItemRequestService {
     ItemRequest createRequest(Long sharerUserId, ItemRequest itemRequest);
 
-    List<ItemRequest> getAll(Long sharerUserId, Integer from, Integer size);
+    List<ItemRequest> findAll(Long sharerUserId, Integer from, Integer size);
 
-    List<ItemRequest> getByRequester(Long sharerUserId);
+    List<ItemRequest> findByRequester(Long sharerUserId, Integer from, Integer size);
 
-    ItemRequest getById(Long sharerUserId, Long requestId);
+    ItemRequest findById(Long sharerUserId, Long requestId);
 }
