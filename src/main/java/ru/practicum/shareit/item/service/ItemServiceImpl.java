@@ -87,11 +87,8 @@ public class ItemServiceImpl implements ItemService, CommentService {
         return commentRepository.findAllByItem(item);
     }
 
-    @Override
     public Map<Long, List<Item>> findAllByRequests(List<Long> itemRequests) {
-        Map<Long, List<Item>> listMap = itemRepository.findAllByRequests(itemRequests)
+        return itemRepository.findAllByRequests(itemRequests)
                 .stream().collect(Collectors.groupingBy(Item::getRequestId, Collectors.toList()));
-        return listMap;//без создания переменной гит ругается
-                    // "method does not override or implement a method from a supertype"
     }
 }
