@@ -25,6 +25,7 @@ public class CommentRepositoryTest {
     private CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
+
     @Test
     @DirtiesContext
     void testFindByOwner() {

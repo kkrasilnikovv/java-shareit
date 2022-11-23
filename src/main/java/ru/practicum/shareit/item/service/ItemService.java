@@ -15,5 +15,6 @@ public interface ItemService {
     List<Item> findAll(Long userId, Integer from, Integer size);
 
     List<Item> search(String str, Long userId, Integer from, Integer size);
+
     List<Item> findByRequestId(Long requestId);
 }

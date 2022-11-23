@@ -14,13 +14,13 @@ public class BookingMapperTest {
     @Test
     void testToBookingDto() {
         BookingDto bookingDto = BookingMapper.bookingToDtoUser(Booking1);
-        assertThat(BookingDto1,equalTo(bookingDto));
+        assertThat(BookingDto1, equalTo(bookingDto));
     }
+
     @Test
     void testBookingToDto() {
         Booking booking = BookingMapper.dtoToBooking(BookingRequestDto1);
-        assertThat(booking.getStart(),equalTo(BookingRequestDto1.getStart()));
-        assertThat(booking.getEnd(),equalTo(BookingRequestDto1.getEnd()));
+        assertThat(booking.getStart(), equalTo(BookingRequestDto1.getStart()));
+        assertThat(booking.getEnd(), equalTo(BookingRequestDto1.getEnd()));
     }
-
 }

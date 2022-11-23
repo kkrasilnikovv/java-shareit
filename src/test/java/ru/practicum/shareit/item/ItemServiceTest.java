@@ -40,13 +40,15 @@ public class ItemServiceTest {
     private final ItemRepository itemRepository;
     @MockBean
     private final UserServiceImpl userService;
+
     @BeforeEach
-    public void init(){
+    public void init() {
         when(userService.findById(1L)).thenReturn(User1);
         when(itemRepository.findById(1L)).thenReturn(Optional.of(Item1));
         when(itemRepository.findById(2L)).thenReturn(Optional.of(Item2));
         when(userService.findById(11L)).thenThrow(NotFoundException.class);
     }
+
     @Test
     @DirtiesContext
     void testCreate() {
@@ -135,7 +137,7 @@ public class ItemServiceTest {
 
     @Test
     void testSearch() {
-        when(itemRepository.search("item1", PageRequest.of(1,10, Sort.by("id"))))
+        when(itemRepository.search("item1", PageRequest.of(1, 10, Sort.by("id"))))
                 .thenReturn(List.of(Item1));
         List<Item> items = itemService.search("item1", 1L, 1, 10);
         assertThat(items, equalTo(List.of(Item1)));

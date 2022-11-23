@@ -58,8 +58,8 @@ public class UserServiceTest {
     @DirtiesContext
     void testUpdateUser() {
         User2.setName("User2new");
-        User UserFromSQL = userService.update(2L, User2);
-        assertThat(UserFromSQL, equalTo(User2));
+        User user = userService.update(2L, User2);
+        assertThat(user, equalTo(User2));
         User2.setName("user2");
     }
 
@@ -72,8 +72,8 @@ public class UserServiceTest {
     @DirtiesContext
     void tesUpdateUserEmail() {
         User2.setEmail("User2new@mail.ru");
-        User UserFromSQL = userService.update(2L, User2);
-        assertThat(UserFromSQL, equalTo(User2));
+        User user = userService.update(2L, User2);
+        assertThat(user, equalTo(User2));
         User2.setEmail("user2@mail.ru");
     }
 
@@ -82,10 +82,10 @@ public class UserServiceTest {
     void testUpdateUserEmailName() {
         User2.setName(null);
         User2.setEmail(null);
-        User UserFromSQL = userService.update(2L, User2);
+        User user = userService.update(2L, User2);
         User2.setEmail("user2@mail.ru");
         User2.setName("user2");
-        assertThat(UserFromSQL, equalTo(User2));
+        assertThat(user, equalTo(User2));
 
     }
 
@@ -100,8 +100,8 @@ public class UserServiceTest {
     @Test
     @DirtiesContext
     void testGetUserById() {
-        User UserFromSQL = userService.findById(1L);
-        assertThat(UserFromSQL, equalTo(User1));
+        User user = userService.findById(1L);
+        assertThat(user, equalTo(User1));
     }
 
     @Test

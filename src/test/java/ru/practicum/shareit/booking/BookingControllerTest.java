@@ -37,11 +37,11 @@ public class BookingControllerTest {
                 .thenReturn(Booking1);
 
         mvc.perform(post("/bookings")
-                .content(mapper.writeValueAsString(BookingDto1))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(mapper.writeValueAsString(BookingDto1))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(BookingDto1)));
     }
@@ -52,10 +52,10 @@ public class BookingControllerTest {
                 .thenReturn(Booking1);
 
         mvc.perform(patch("/bookings/2?approved=true")
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(BookingDto1)));
     }
@@ -66,10 +66,10 @@ public class BookingControllerTest {
                 .thenReturn(Booking1);
 
         mvc.perform(get("/bookings/1")
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 2L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(BookingDto1)));
     }
@@ -80,10 +80,10 @@ public class BookingControllerTest {
                 .thenReturn(List.of(Booking1));
 
         mvc.perform(get("/bookings?state=ALL")
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 2L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 2L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of(BookingDto1))));
     }
@@ -94,10 +94,10 @@ public class BookingControllerTest {
                 .thenReturn(List.of(Booking1));
 
         mvc.perform(get("/bookings/owner?state=ALL")
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of(BookingDto1))));
     }
@@ -108,10 +108,10 @@ public class BookingControllerTest {
                 .thenReturn(List.of(Booking1));
 
         mvc.perform(get("/bookings/owner?state=text")
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Sharer-User-Id", 1L)
-                .accept(MediaType.APPLICATION_JSON))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
