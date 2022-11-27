@@ -31,14 +31,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User update(Long id, User user) {
-        User oldUser = userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("Пользователь с id " + id + " не найден."));
-        User updUser = user;
-        if (updUser.getName() != null && !updUser.getName().isBlank()) {
-            oldUser.setName(updUser.getName());
+        User oldUser = findById(id);
+        if (user.getName() != null && !user.getName().isBlank()) {
+            oldUser.setName(user.getName());
         }
-        if (updUser.getEmail() != null) {
-            oldUser.setEmail(updUser.getEmail());
+        if (user.getEmail() != null) {
+            oldUser.setEmail(user.getEmail());
         }
         return oldUser;
     }
@@ -52,6 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteById(Long id) {
+        findById(id);
         userRepository.deleteById(id);
     }
 

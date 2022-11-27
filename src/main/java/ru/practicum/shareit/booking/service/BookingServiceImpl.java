@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,32 +83,32 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> findAll(Long bookerId, State state) {
+    public List<Booking> findAll(Long bookerId, State state, Integer from, Integer size) {
         User booker = userService.findById(bookerId);
         switch (state) {
             case CURRENT: {
                 return bookingRepository.findCurrentBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case PAST: {
                 return bookingRepository.findPastBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case WAITING: {
                 return bookingRepository.findWaitingBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case REJECTED: {
                 return bookingRepository.findRejectedBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case FUTURE: {
                 return bookingRepository.findFutureBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case ALL: {
                 return bookingRepository.findAllBookingByBooker(booker,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             default: {
                 return Collections.emptyList();
@@ -116,32 +117,32 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> findAllByOwner(Long ownerId, State state) {
+    public List<Booking> findAllByOwner(Long ownerId, State state, Integer from, Integer size) {
         User owner = userService.findById(ownerId);
         switch (state) {
             case CURRENT: {
                 return bookingRepository.findCurrentBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case PAST: {
                 return bookingRepository.findPastBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case WAITING: {
                 return bookingRepository.findWaitingBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case REJECTED: {
                 return bookingRepository.findRejectedBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case FUTURE: {
                 return bookingRepository.findFutureBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             case ALL: {
                 return bookingRepository.findAllBookingByOwner(owner,
-                        Sort.by(Sort.Direction.DESC, "start"));
+                        PageRequest.of(from / size, size, Sort.by("start").descending())).toList();
             }
             default: {
                 return Collections.emptyList();

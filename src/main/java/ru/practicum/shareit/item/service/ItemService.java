@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface ItemService {
@@ -12,7 +13,9 @@ public interface ItemService {
 
     Item findById(Long id);
 
-    List<Item> findAll(Long userId);
+    List<Item> findAll(Long userId, Integer from, Integer size);
 
-    List<Item> search(String str, Long userId);
+    List<Item> search(String str, Long userId, Integer from, Integer size);
+
+    Map<Long, List<Item>> findAllByRequests(List<Long> itemRequests);
 }

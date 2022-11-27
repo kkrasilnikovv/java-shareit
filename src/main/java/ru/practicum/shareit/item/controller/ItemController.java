@@ -16,12 +16,15 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
@@ -30,8 +33,10 @@ public class ItemController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        List<Item> items = itemService.findAll(userId);
+    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                @Positive @RequestParam(defaultValue = "10") Integer size) {
+        List<Item> items = itemService.findAll(userId, from, size);
         bookingService.setLastAndNextBooking(items, userId);
         return items.stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
@@ -66,10 +71,12 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String text,
-                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                @RequestHeader("X-Sharer-User-Id") Long userId,
+                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                @Positive @RequestParam(defaultValue = "10") Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemService.search(text, userId).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
+        return itemService.search(text, userId, from, size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 }

@@ -15,9 +15,9 @@ public interface BookingService {
 
     Booking findById(Long userId, Long bookingId);
 
-    List<Booking> findAll(Long bookerId, State state);
+    List<Booking> findAll(Long bookerId, State state, Integer from, Integer size);
 
-    List<Booking> findAllByOwner(Long ownerId, State state);
+    List<Booking> findAllByOwner(Long ownerId, State state, Integer from, Integer size);
 
     void checkAllByItemAndBooker(Long itemId, Long bookerId);
 
