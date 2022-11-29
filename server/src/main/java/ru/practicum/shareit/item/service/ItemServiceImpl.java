@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService, CommentService {
     }
 
     @Override
-    public List<Item> search(String text, Long userId, Integer from, Integer size) {
+    public List<Item> search(String text, Integer from, Integer size) {
         return itemRepository.search(text, PageRequest.of(from, size, Sort.by("id")));
     }
 

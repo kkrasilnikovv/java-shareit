@@ -15,7 +15,7 @@ public interface ItemService {
 
     List<Item> findAll(Long userId, Integer from, Integer size);
 
-    List<Item> search(String str, Long userId, Integer from, Integer size);
+    List<Item> search(String text, Integer from, Integer size);
 
     Map<Long, List<Item>> findAllByRequests(List<Long> itemRequests);
 }

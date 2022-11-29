@@ -71,12 +71,11 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestParam(name = "text") String text,
-                                @RequestHeader("X-Sharer-User-Id") Long userId,
                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                 @Positive @RequestParam(defaultValue = "10") Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemService.search(text, userId, from, size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
+        return itemService.search(text, from, size).stream().map(ItemMapper::itemToDto).collect(Collectors.toList());
     }
 }

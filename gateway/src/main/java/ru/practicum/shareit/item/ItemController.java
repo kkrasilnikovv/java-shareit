@@ -8,6 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @Controller
 @RequestMapping(path = "/items")
@@ -41,20 +43,20 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllItemsByUser(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                    @Valid @RequestParam(name = "from", defaultValue = "1") int from,
-                                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+    public ResponseEntity<Object> getAllItemsByUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                    @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                    @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("get all items from user id={}", userId);
         return itemClient.getAllItemsByUser(userId, from, size);
 
     }
 
-    @GetMapping("search")
-    public ResponseEntity<Object> search(@RequestParam(required = false) String text,
-                                         @Valid @RequestParam(name = "from", defaultValue = "1") int from,
-                                         @RequestParam(name = "size", defaultValue = "10") int size) {
+    @GetMapping("/search")
+    public ResponseEntity<Object> search(@RequestParam(name = "text") String text,
+                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                         @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("search text={}", text);
-        return itemClient.search(text, from, size);
+        return itemClient.search(text,from, size);
     }
 
     @PostMapping("/{itemId}/comment")
