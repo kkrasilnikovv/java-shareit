@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.*;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.validatedGroup.Create;
+import ru.practicum.shareit.exception.validated_group.Create;
 
 
 import javax.validation.constraints.Positive;
@@ -48,10 +48,6 @@ public class BookingController {
                                     @RequestParam(defaultValue = "ALL") String state,
                                     @PositiveOrZero @RequestParam(defaultValue = "1") Integer from,
                                     @Positive @RequestParam(defaultValue = "10") Integer size) {
-        //if (from < 0 || size == 0) {
-        //    throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
-       //             " ,кол-во элементов на странице " + size);
-       // }
         return bookingService.findAll(bookerId, State.mapStatus(state), from, size).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }
@@ -61,10 +57,6 @@ public class BookingController {
                                            @RequestParam(defaultValue = "ALL") String state,
                                            @PositiveOrZero  @RequestParam(defaultValue = "1") Integer from,
                                            @Positive @RequestParam(defaultValue = "10") Integer size) {
-        //if (from < 0 || size == 0) {
-        //    throw new ValidationException("Переданы некорректные параметры запроса: начать со странице " + from +
-       //             " ,кол-во элементов на странице " + size);
-       // }
         return bookingService.findAllByOwner(ownerId, State.mapStatus(state), from, size).stream()
                 .map(BookingMapper::bookingToDtoUser).collect(Collectors.toList());
     }

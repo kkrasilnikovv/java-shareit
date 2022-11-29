@@ -29,8 +29,12 @@ public class RequestClient extends BaseClient {
         return post("", userId, requestDto);
     }
 
-    public ResponseEntity<Object> getByRequester(Long userId) {
-        return get("", userId);
+    public ResponseEntity<Object> getByRequester(Long userId, int from, int size) {
+        Map<String, Object> parameters = Map.of(
+                "from", from,
+                "size", size
+        );
+        return get("", userId,parameters);
     }
 
     public ResponseEntity<Object> getAll(Long userId, int from, int size) {

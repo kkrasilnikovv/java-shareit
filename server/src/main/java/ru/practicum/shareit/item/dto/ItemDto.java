@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.exception.validatedGroup.Create;
+import ru.practicum.shareit.exception.validated_group.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
