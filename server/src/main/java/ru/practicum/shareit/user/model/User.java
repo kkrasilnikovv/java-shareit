@@ -23,7 +23,7 @@ public class User {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
+//гит почему то завалил все тесты, а в постмане идеально,этот коммент для того, чтобы повторить пуш
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
